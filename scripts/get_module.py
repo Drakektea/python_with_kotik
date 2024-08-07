@@ -35,6 +35,8 @@ def clear_nt(text: str) -> str:
 
 module_count = input("Введите номер модуля: ")
 catalog_name = input("Введите имя каталога: ")
+from_task_count = input("Введите номер задания(с какого): ") or '0'
+to_task_count = input("Введите номер задания(по какой): ") or 'inf'
 
 if not os.path.exists(catalog_name):
     os.makedirs(catalog_name)
@@ -62,6 +64,12 @@ if response.status_code == 200:
 
     for div in all_module_tasks:
         objects = div.find("p", class_="paragraph_exercise").contents
+        sub_module_count = objects[1].text.split('.')[1]
+        if int(sub_module_count) < int(from_task_count):
+            continue
+        if to_task_count != 'inf' and int(sub_module_count) > int(to_task_count):
+            continue
+
         task_text = ''
         for i, element in enumerate(objects[2:len(objects) - 2], start=2):
             if isinstance(element, str):
@@ -71,7 +79,6 @@ if response.status_code == 200:
             task_text += text
         final_text = wrap_text(task_text).replace(' .', '.').replace(' ,', ',')
 
-        sub_module_count = objects[1].text.split('.')[1]
         filename = f'{module_count}-{sub_module_count}.py'
         filepath = os.path.join(catalog_name, filename)
 
