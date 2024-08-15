@@ -26,7 +26,7 @@ def wrap_text(text, max_length=63):
     else:
         wrapped_lines.append(current_line)
 
-    return '\n'.join(line.strip()for line in wrapped_lines)
+    return '\n'.join(line.strip() for line in wrapped_lines)
 
 
 def clear_nt(text: str) -> str:
